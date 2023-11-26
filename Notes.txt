@@ -1,0 +1,3 @@
+with Java17, the following JVM options must be added: --add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/java.util=ALL-UNNAMED
+
+On a Mac: Use SBT installed via sdk-man as recommended here: https://stackoverflow.com/a/64483763
