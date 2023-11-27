@@ -15,3 +15,7 @@ libraryDependencies += "org.apache.logging.log4j" % "log4j-slf4j-impl" % "2.19.0
 libraryDependencies += "org.apache.logging.log4j" % "log4j-api" % "2.19.0"
 libraryDependencies += "org.apache.logging.log4j" % "log4j-core" % "2.19.0"
 
+assembly / assemblyMergeStrategy := {
+  case PathList("META-INF", xs @ _*) => MergeStrategy.discard
+  case x => MergeStrategy.first
+}
