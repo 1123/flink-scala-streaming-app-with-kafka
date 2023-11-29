@@ -8,8 +8,8 @@ lazy val root = (project in file("."))
   )
 
 libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.11" % Test
-libraryDependencies += "org.apache.flink" % "flink-clients" % "1.17.1"
-libraryDependencies += "org.apache.flink" % "flink-connector-kafka" % "1.17.1"
+libraryDependencies += "org.apache.flink" % "flink-clients" % "1.16.1"
+libraryDependencies += "org.apache.flink" % "flink-connector-kafka" % "1.16.1"
 libraryDependencies += "org.apache.logging.log4j" % "log4j-slf4j-impl" % "2.19.0"
 libraryDependencies += "org.apache.logging.log4j" % "log4j-api" % "2.19.0"
 libraryDependencies += "org.apache.logging.log4j" % "log4j-core" % "2.19.0"

@@ -9,10 +9,9 @@ class OrderSource extends SourceFunction[Order] {
 
   val random = new Random()
   var isRunning = true
-  @transient
-  private val log = Logger.getLogger(getClass.getName)
 
   override def run(ctx: SourceFunction.SourceContext[Order]): Unit = {
+    val log = Logger.getLogger(getClass.getName)
     while (isRunning) {
       log.info("Creating an Order")
       ctx.collect(Order(

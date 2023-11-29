@@ -1,29 +1,36 @@
 package io.confluent.examples.flink
 
 import java.util.Properties
+import java.util.logging.Logger
 
 object ConfluentCloudApp extends KafkaPropsComponent with StreamsAppComponent with Serializable {
 
   val kafkaProps = new Properties()
-  // TODO: could also use require.
-  assert(
-    System.getenv("BOOTSTRAP_SERVERS") != null,
-    "You must set the BOOTSTRAP_SERVERS environment variable. "
-  )
-  kafkaProps.put("bootstrap.servers", System.getenv("BOOTSTRAP_SERVERS"))
-  kafkaProps.put("ssl.endpoint.identification.algorithm", "https")
-  kafkaProps.put("sasl.mechanism", "PLAIN")
-  kafkaProps.put("security.protocol", "SASL_SSL")
-  assert(
-    System.getenv("SASL_JAAS_CONFIG") != null,
-    "You must set the SASL_JAAS_CONFIG environment variable. "
-  )
-  kafkaProps.put("sasl.jaas.config", System.getenv("SASL_JAAS_CONFIG"))
 
   val streamsApp = new StreamsApp
 
   def main(args: Array[String]): Unit = {
+    // TODO: could also use require.
+    val log = Logger.getLogger(getClass.getName)
+    log.info("Arguments provided:")
+    log.info(args.length + "")
+    log.info(args(0) + " " + args(1) + " " + args(2))
+    assert(
+      args.length == 3,
+      "Usage: provide three arguments: 1) bootstrap server address; 2) api-key; 3) api-secret;  "
+    )
+    kafkaProps.put("bootstrap.servers", args(0))
+    kafkaProps.put("ssl.endpoint.identification.algorithm", "https")
+    kafkaProps.put("sasl.mechanism", "PLAIN")
+    kafkaProps.put("security.protocol", "SASL_SSL")
+    kafkaProps.put("sasl.jaas.config",
+      String.format(
+        "org.apache.kafka.common.security.plain.PlainLoginModule required username='%s' password='%s';",
+        args(1),
+        args(2)
+      ))
     streamsApp.run()
+    // "org.apache.kafka.common.security.plain.PlainLoginModule required username='' password='';"
   }
 
 }
