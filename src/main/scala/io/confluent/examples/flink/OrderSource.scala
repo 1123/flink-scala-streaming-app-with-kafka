@@ -1,18 +1,20 @@
 package io.confluent.examples.flink
 
-import com.typesafe.scalalogging.LazyLogging
 import org.apache.flink.streaming.api.functions.source.SourceFunction
 
+import java.util.logging.Logger
 import scala.util.Random
 
-class OrderSource extends LazyLogging with SourceFunction[Order] {
+class OrderSource extends SourceFunction[Order] {
 
   val random = new Random()
   var isRunning = true
+  @transient
+  private val log = Logger.getLogger(getClass.getName)
 
   override def run(ctx: SourceFunction.SourceContext[Order]): Unit = {
     while (isRunning) {
-      logger.info("Creating an Order")
+      log.info("Creating an Order")
       ctx.collect(Order(
         System.currentTimeMillis(),
         random.nextInt(1000),

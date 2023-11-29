@@ -5,15 +5,14 @@ import org.apache.flink.streaming.api.functions.source.SourceFunction
 import org.apache.flink.streaming.api.functions.source.SourceFunction.SourceContext
 import org.apache.flink.streaming.api.watermark.Watermark
 import org.scalatest.funsuite.AnyFunSuite
-import com.typesafe.scalalogging.LazyLogging
 
 /**
  * This is just for testing the testing framework :-)
  */
 
-class OrderSourceTest extends AnyFunSuite with LazyLogging:
+class OrderSourceTest extends AnyFunSuite:
   test("OrderSource.run") {
-    logger.info("Test ist starting")
+    // logger.info("Test ist starting")
     val orderSource = new OrderSource()
     val thread = new Thread {
       override def run(): Unit = {
@@ -24,12 +23,13 @@ class OrderSourceTest extends AnyFunSuite with LazyLogging:
     Thread.sleep(2000)
     orderSource.cancel()
     thread.join()
-    logger.info("Test finished")
+    // logger.info("Test finished")
   }
 
-class MyOrderSourceContext extends SourceFunction.SourceContext[Order] with LazyLogging {
+class MyOrderSourceContext extends SourceFunction.SourceContext[Order] {
   override def collect(element: Order): Unit =
-    logger.info(element.toString)
+    val foo = "bar"
+    // logger.info(element.toString)
 
   override def collectWithTimestamp(element: Order, timestamp: Long): Unit = ???
 

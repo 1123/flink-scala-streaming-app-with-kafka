@@ -1,16 +1,15 @@
 package io.confluent.examples.flink
 
-import com.typesafe.scalalogging.LazyLogging
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.ObjectMapper
 import org.scalatest.funsuite.AnyFunSuite
 
-class ShipmentLoggerTest extends AnyFunSuite with LazyLogging:
+class ShipmentLoggerTest extends AnyFunSuite:
 
   test( "Order.toString") {
     val shipment = Shipment(
       Order(0l, 0, "foo", Address("foo", "bar", 0)),
       0l)
-    logger.info(new ObjectMapper().writeValueAsString(shipment))
+    // logger.info(new ObjectMapper().writeValueAsString(shipment))
   }
 
   test("ShipmentLogger.invoke") {

@@ -1,6 +1,5 @@
 package io.confluent.examples.flink
 
-import com.typesafe.scalalogging.LazyLogging
 import org.apache.flink.api.common.eventtime.BoundedOutOfOrdernessWatermarks
 import org.apache.flink.api.common.serialization.SimpleStringSchema
 import org.apache.flink.connector.base.DeliveryGuarantee
@@ -15,22 +14,22 @@ import org.apache.flink.streaming.api.functions.ProcessFunction
 import org.apache.flink.util.Collector
 
 import java.time.Duration
+import java.util.logging.Logger
 
 trait StreamsAppComponent {
   this: KafkaPropsComponent =>
   val streamsApp: StreamsApp
 
-  // TODO: no idea, why this needs to implement Serializable. It seems like Flink somehow stores instances of the
-  // StreamsApp for recovery purposes?
-  // TODO: the following approach may help:
-  //  https://stackoverflow.com/questions/61128734/the-implementation-of-the-mapfunction-is-not-serializable-flink
-  class StreamsApp extends Serializable with LazyLogging {
+  class StreamsApp extends Serializable {
+
+    @transient
+    private val log = Logger.getLogger(getClass.getName)
     // TODO: topic names should be in the configuration
     val ordersTopic = "flink-orders"
     val shipmentTopic = "flink-shipments"
 
     def run() = {
-      logger.info("Kafka Properties: \n {}",  kafkaProps)
+      log.info("Kafka Properties: \n" + kafkaProps)
 
       val env: StreamExecutionEnvironment = StreamExecutionEnvironment.getExecutionEnvironment
 
@@ -96,7 +95,7 @@ trait StreamsAppComponent {
 
       serialized.sinkTo(shipmentSink)
 
-      logger.info("Starting Streaming Job")
+      log.info("Starting Streaming Job")
       env.execute("Kafka Streaming Job")
     }
   }
