@@ -12,13 +12,13 @@ object ConfluentCloudApp extends KafkaPropsComponent with StreamsAppComponent wi
   def main(args: Array[String]): Unit = {
     // TODO: could also use require.
     val log = Logger.getLogger(getClass.getName)
-    log.info("Arguments provided:")
-    log.info(args.length + "")
-    log.info(args(0) + " " + args(1) + " " + args(2))
     assert(
       args.length == 3,
       "Usage: provide three arguments: 1) bootstrap server address; 2) api-key; 3) api-secret;  "
     )
+    log.info("Arguments provided:")
+    log.info(args.length + "")
+    log.info(args(0) + " " + args(1) + " " + args(2))
     kafkaProps.put("bootstrap.servers", args(0))
     kafkaProps.put("ssl.endpoint.identification.algorithm", "https")
     kafkaProps.put("sasl.mechanism", "PLAIN")

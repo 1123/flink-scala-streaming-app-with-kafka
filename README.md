@@ -1,13 +1,14 @@
 ## Flink Kafka Scala Sample Stream
 
 A simple Flink Streaming Scala application communicating via Kafka topics. 
-Not that this application uses an embedded Flink cluster. 
-It currently cannot be configured to run with a Flink cluster on Confluent Cloud.
 
 ### Features 
-* Works with Confluent Cloud or any simple Kafka cluster
+
+* This application can both run within an Embedded Flink Cluster as well as on a real Flink Cluster. 
+* This repository provides a sample docker-compose setup to spin up a cluster and deployment scripts for the application on that local cluster. 
+* The application can either connect to a local Kafka cluster or to a Confluent Cloud Kafka Cluster. 
 * Native Scala Dependency Injection for better testablility and environment support. 
-* Directly uses the Flink Java Streaming API.
+* Directly uses the Flink Java Streaming API. The Flink Scala API has been deprecated. 
 
 ### Overview Diagram
 
@@ -17,32 +18,45 @@ It currently cannot be configured to run with a Flink cluster on Confluent Cloud
 
 #### Prerequisites
 
-* A recent version of Apache Maven installed
+* A recent version of the Scala Build Tool (SBT) installed
 * Confluent Platform installed for running locally
 * A Confluent Cloud Account for running on Confluent Cloud
-* Java 11
+* A recent version of Java
 * Linux or Mac environment for running the start scripts. 
 
-#### Running Locally
+#### Running Within an Embedded Flink Cluster Against Local Kafka
 
-For running with a local cluster, start the `LocalApp` class from within your IDE.
+For running with a local Kafka cluster and an embedded Flink Cluster, 
+start the `LocalApp` class from within your IDE.
 * This class expects a Kafka broker listening on `localhost:9092` without authentication and authorization
 * Topics will be auto-created when the app is started. 
   * You may need to start the app twice.
 * No need to set environment variables
-* Alternatively, you can run the `script-local.sh` on a Mac. 
+* Alternatively, you can run the `./run-against-local-kafka.sh` on a Mac. 
   * You may need to set the `JAVA_HOME` environment variable appropriately. 
 
-#### Running with Confluent Cloud
+#### Running on an Embedded Flink Cluster against Confluent Cloud
 
 For running with a Kafka Cluster in Confluent Cloud, follow these steps:
 * Create the topics `flink-orders` and `flink-shipments`.
 * Create an API Key and API Secret for Confluent Cloud
 * Set the following environment variables: 
-  * `BOOTSTRAP_SERVERS=pkc-...confluent.cloud:9092`
-  * `SASL_JAAS_CONFIG=org.apache.kafka.common.security.plain.PlainLoginModule required username='<YOUR_API_KEY>' password='<YOUR_PASSWORD>';`
+  * `export BOOTSTRAP_SERVERS=pkc-...confluent.cloud:9092`
+  * `export API_KEY=...`
+  * `export API_SECRET=...`
 * Then run the class `ConfluentCloudApp` from within your IDE
-* Alternatively, run the script `run-on-confluent-cloud.sh`. 
-  * This script expects the environment variables shown in `sample.env`.
+  * You may need to add some Java21 JVM options as specified in `run-against-confluent-cloud.sh` 
+* Alternatively, run the script `run-against-confluent-cloud.sh`. 
 
+#### Running on Real Flink Cluster
 
+You can spin up a flink cluster with docker-compose, or you may want to use a flink cluster deployed within 
+the Cloud provider of your choice. 
+
+To deploy the app on the Flink cluster, do the following: 
+* Build the fat jar: `sbt clean assembly`
+* Upload the jar: `upload-jar.sh`
+* Run the job: `submit-job.sh`
+
+You will need to adjust the REST API Endpoint of your Flink cluster in the above scripts, 
+and possibly also provide flink authentication credentials. 
